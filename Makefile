@@ -6,7 +6,7 @@ LDFLAGS_WII := -lxwiimote
 BUILD_DIR := build
 
 WII_SRC := Wiimote/wii4race.cxx
-PEDALS_SRC := Pedals/pedals_forwarder.cxx
+PEDALS_SRC := ArduinoPedals/pedals_forwarder.cxx
 
 WII_BIN := $(BUILD_DIR)/wii4race
 PEDALS_BIN := $(BUILD_DIR)/pedals_forwarder

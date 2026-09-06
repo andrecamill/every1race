@@ -4,6 +4,7 @@
 #include "AnalogEmulator.h"
 
 #include <cstring>
+#include <cerrno>
 #include <iostream>
 #include <map>
 #include <vector>
@@ -42,11 +43,18 @@ public:
         uidev.id.product = 0x1811;
         uidev.id.version = 1;
 
-        // default ranges
+        // default ranges: steering (ABS_X) should be signed, others unsigned
         for (int c : abs_codes) {
             if (c >= 0 && c < ABS_CNT) {
-                uidev.absmin[c] = 0;
-                uidev.absmax[c] = 32767;
+                if (c == ABS_X) {
+                    uidev.absmin[c] = -32767;
+                    uidev.absmax[c] = 32767;
+                    uidev.absflat[c] = 0;
+                    uidev.absfuzz[c] = 16;
+                } else {
+                    uidev.absmin[c] = 0;
+                    uidev.absmax[c] = 32767;
+                }
             }
         }
 
@@ -97,6 +105,12 @@ public:
     void setButton(int btn_code, bool pressed) {
         if (fd_ < 0) return;
         emit(EV_KEY, btn_code, pressed ? 1 : 0);
+    }
+
+    // emit raw integer value for an axis (matches original code behavior)
+    void setAxisRaw(int abs_code, int value) {
+        if (fd_ < 0) return;
+        emit(EV_ABS, abs_code, value);
     }
 
     void syn_report() { if (fd_ >= 0) emit(EV_SYN, SYN_REPORT, 0); }

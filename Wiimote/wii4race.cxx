@@ -304,12 +304,11 @@ int main(int argc, char **argv) {
 
         // Update analog emulator and emit via unified device
         g_analog_emulator.update(dt);
-        // steering: steer_out in [-AXIS_MAX..AXIS_MAX] -> normalize to 0..1 using range
-        double steer_norm = (double)(steer_out - AXIS_MIN) / (double)(AXIS_MAX - AXIS_MIN);
-        aedev.setAxisValue(ABS_X, steer_norm);
+        // emit raw axis values like the original implementation
+        aedev.setAxisRaw(ABS_X, steer_out);
         for (int i = 0; i < TRG_COUNT; ++i) {
-            double v = g_analog_emulator.getValue(i);
-            aedev.setAxisValue(g_triggers[i].abs_code, v);
+            int out = (int)(g_analog_emulator.getValue(i) * TRIGGER_MAX);
+            aedev.setAxisRaw(g_triggers[i].abs_code, out);
         }
         aedev.setButton(BTN_TOP, btn_plus);
         aedev.setButton(BTN_TOP2, btn_minus);
