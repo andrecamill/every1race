@@ -1,10 +1,9 @@
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
   <h3 align="center">every1race</h3>
 
   <p align="center">
     open-source toolset for open sim racing
+    <br />
     <br />
   </p>
 </div>
